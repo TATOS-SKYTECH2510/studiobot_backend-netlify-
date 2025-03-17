@@ -14,4 +14,4 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
         return res.status(401).json({ error: 'Unauthorized' });  
     }   
     next();  
-};  
+}; 
