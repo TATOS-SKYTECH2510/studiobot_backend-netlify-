@@ -27,18 +27,18 @@ class ProfileController {
             return res.status(200).json(data)
     }
     static getUserProfile = async (req: Request, res: Response) => {
-        const { id: user_id } = req.user;
+        const user = (req as any).user;
         const { data, error } = await supabase
             .from('profiles')
             .select('*')
-            .eq('user_id', user_id)
+            .eq('user_id', user?.id)
             .single();
         if (error)
-            return res.status(400).json({
+            res.status(400).json({
                 error: error.message
             }
             )
-        return res.status(200).json(data);
+        res.status(200).json(data);
     }
     static updateProfile = async (req: Request, res: Response) => {
         const cond: Object = req.body;
@@ -46,7 +46,7 @@ class ProfileController {
             return res.status(400).json({
                 error: "Security Error"
             })
-        const { data, error } = await supabase.from('profiles').update(cond).eq("user_id", req.user.id);
+        const { data, error } = await supabase.from('profiles').update(cond).eq("user_id", (req as any).user.id);
         if (error)
             return res.status(400).json({
                 error: error.message

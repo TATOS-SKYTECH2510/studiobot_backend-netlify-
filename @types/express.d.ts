@@ -1,9 +1,15 @@
-import { User } from '@supabase/gotrue-js'; // Adjust this import according to your Supabase User type  
+import { User } from '@supabase/supabase-js';
+import 'express';
 
 declare global {
     namespace Express {
         interface Request {
-            user?: User; // Add the user property to the Request interface  
+            user?: User & {
+                id: string;
+                role?: string;
+            };
         }
     }
-}  
+}
+
+export { };  

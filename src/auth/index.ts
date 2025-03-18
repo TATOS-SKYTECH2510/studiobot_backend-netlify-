@@ -1,20 +1,26 @@
-
 import { Request, Response, NextFunction } from 'express';
 import { supabase } from '../supabaseClient';
 
+// Example auth middleware  
 export const auth = async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers['authorization']?.split(" ")[1];
+    try {
+        const token = req.headers['authorization']?.split(' ')[1];
+        const { data, error } = await supabase.auth.getUser(token);
 
-    if (!token) {
-        return res.status(401).json({ message: 'Unauthorized: Token missing' });
+        if (error || !data.user) {
+            res.status(401).json({ message: 'Unauthorized' });
+        }
+        else {
+            (req as any).user = {
+                ...data.user,
+                id: data.user.id,
+                role: 'user' // You can set roles dynamically  
+            };
+            (req as any).user = data.user
+        }
+
+        next();
+    } catch (err) {
+        next(err);
     }
-
-    // Validate the token via Supabase  
-    const { data, error } = await supabase.auth.getUser(token);
-
-    if (error || !data.user) {
-        return res.status(401).json({ message: 'Unauthorized: Invalid token' });
-    }
-    req.user = data.user;
-    next();
 };  
