@@ -27,7 +27,7 @@ export const buyTwilioPhoneNumber = async () => {
             if (availableNumbers.length > 0) {
                 const phoneNumber = availableNumbers[0].phone_number;
                 const purchasedNumberResponse = await axios.post(
-                    `https://api.twilio.com/2010-04-01/Accounts/AC9ba1d8db5b82d050e16101ffee73d17a/IncomingPhoneNumbers.json`,
+                    `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/IncomingPhoneNumbers.json`,
                     {
                         PhoneNumber: phoneNumber,
                         VoiceUrl: 'http://demo.twilio.com/docs/voice.xml', // Example voice URL
