@@ -1,6 +1,9 @@
-import express from "express"
-const Router = express.Router();
-Router.get("/synthflow/createAssistant"
+import express, { Request, Response } from "express";
+const router = express.Router();
+import { handleWebhook } from "../controllers/webhookController";
+
+router.post("/synthflow/createAssistant"
     ,
-)
-export default Router;
+);
+router.post("/webhook/:id", handleWebhook);
+export default router;
