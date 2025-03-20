@@ -13,13 +13,14 @@ function containsSecurityFields(obj: Object) {
 
 class ProfileController {
     static saveProfile = async (req: Request, res: Response) => {
+        const user = (req as any).user;
         const cond: Object = req.body;
         if (!containsSecurityFields(cond))
             res.status(400).json({
                 error: "Security Error"
             })
         else {
-            const { data, error } = await supabase.from("profiles").insert({ ...cond, plan: "TRIAL", plan_start: new Date(), plan_end: new Date(new Date().setDate(new Date().getDate() + 15)), total_usage_minutes: 0 })
+            const { data, error } = await supabase.from("profiles").insert({ ...cond, plan: "TRIAL", plan_start: new Date(), plan_end: new Date(new Date().setDate(new Date().getDate() + 15)), total_usage_minutes: 0, user_id: user.id })
             if (error)
                 res.status(400).json({
                     error: error.message

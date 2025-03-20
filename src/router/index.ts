@@ -10,6 +10,7 @@ import { supabase } from "../supabaseClient";
 import ActionController from "../controllers/actionController";
 import { extractTattooShopInfo } from "../lib/firecrawl";
 import { buyTwilioPhoneNumber } from "../lib/twilio";
+import PhoneNumberController from "../controllers/phoneNumberController";
 const router = express.Router();
 
 /**
@@ -197,6 +198,15 @@ router.get('/get-optionalPreferences', auth, OptionalPreferenceController.getOpt
 router.put('/update-optionalPreferences', auth, OptionalPreferenceController.updateOptionalPreferences);
 router.post('/optionalPreferences', auth, OptionalPreferenceController.saveOptionalPreferences);
 
+
+/**
+ * PhoneNumbers Table APIs
+ * 
+ */
+
+router.post('/phone_numbers', auth, PhoneNumberController.createPhoneNumber);
+
+
 ///Stripe
 router.post('/createPaymentIntent', auth, async (req, res) => {
     const { plan_id, currency }: { plan_id: Plan, currency: string } = req.body;
@@ -225,6 +235,7 @@ router.post('/createPaymentIntent', auth, async (req, res) => {
         res.status(400).json({ error: err.message })
     }
 })
+
 
 
 //Action Table
