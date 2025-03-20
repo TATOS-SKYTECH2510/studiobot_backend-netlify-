@@ -56,7 +56,7 @@ export const updateAssistant = async (cond: Partial<AssistantPropsType>, user: U
             if (!response.ok) {
                 throw new Error(`Error creating assistant: ${response.statusText}`);
             }
-            console.log(response);
+            return response;
         } catch (err) {
             throw error
         }
@@ -65,7 +65,12 @@ export const updateAssistant = async (cond: Partial<AssistantPropsType>, user: U
         throw new Error(`Error: ${err.message}`)
     }
 };
-export const getAssistant = async (modelId: string) => {
+export const getAssistant = async (user: User) => {
+    const { data, error } = await supabase
+        .from('profiles')
+        .select('model_id')
+        .eq('user_id', user.id)
+        .single();
     const options = {
         method: 'GET',
         headers: {
@@ -76,7 +81,7 @@ export const getAssistant = async (modelId: string) => {
     };
     try {
         const response = await fetch(
-            `${synthflowUrl}/assistants/${modelId}`,
+            `${synthflowUrl}/assistants/${data?.model_id}`,
             options
         );
         if (!response.ok) {
