@@ -46,42 +46,17 @@ export const buyTwilioPhoneNumber = async () => {
                     }
                 );
                 if (purchasedNumberResponse.status === 201) {
-                    return {
-                        statusCode: 200,
-                        body: JSON.stringify({
-                            phoneNumber: phoneNumber,
-                        }),
-                    };
+                    return phoneNumber;
                 } else {
-                    return {
-                        statusCode: 500,
-                        body: JSON.stringify({
-                            error: `Error purchasing number: ${purchasedNumberResponse.status} - ${purchasedNumberResponse.statusText}`,
-                        }),
-                    };
+                    throw new Error(`Error purchasing number: ${purchasedNumberResponse.status} - ${purchasedNumberResponse.statusText}`);
                 }
             } else {
-                return {
-                    statusCode: 404,
-                    body: JSON.stringify({
-                        error: 'No available numbers found.',
-                    }),
-                };
+                throw new Error(`No available numbers found.`);
             }
         } else {
-            return {
-                statusCode: 500,
-                body: JSON.stringify({
-                    error: `Error searching numbers: ${availableNumbersResponse.status} - ${availableNumbersResponse.statusText}`,
-                }),
-            };
+            throw new Error(`Error searching numbers: ${availableNumbersResponse.status} - ${availableNumbersResponse.statusText}`)
         }
     } catch (e: any) {
-        return {
-            statusCode: 500,
-            body: JSON.stringify({
-                error: `Error purchasing number: ${e.message}`,
-            }),
-        };
+        throw new Error(`Error purchasing number: ${e.message}`);
     }
 }

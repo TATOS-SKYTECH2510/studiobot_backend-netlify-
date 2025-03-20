@@ -8,6 +8,8 @@ import { createPaymentIntent, paymentValidate } from "../lib/stripe";
 import { Plan, PLAN_DETAILS } from "../types/plan";
 import { supabase } from "../supabaseClient";
 import ActionController from "../controllers/actionController";
+import { extractTattooShopInfo } from "../lib/firecrawl";
+import { buyTwilioPhoneNumber } from "../lib/twilio";
 const router = express.Router();
 
 /**
@@ -101,7 +103,40 @@ router.get('/synthflow/action/:id', auth, async (req, res) => {
     }
 
 })
+/**
+ * FireCrawl Apis
+ * 
+ */
+router.post('/firecrawl/extractTattooShopInfo', auth, async (req, res) => {
+    const { url } = req.body;
+    try {
+        const extractedTattoShopInfo = await extractTattooShopInfo(url);
+        res.status(200).json(extractTattooShopInfo);
+    } catch (error) {
+        res.status(400).json(error);
+    }
+})
+/**
+ * Twiliow APIs
+ * 
+ */
 
+router.post('/twiliow/buy', auth, async (__, res) => {
+    try {
+        const phoneNumber = await buyTwilioPhoneNumber();
+        res.status(200).json({
+            phoneNumber: phoneNumber
+        })
+    } catch (err: any) {
+        res.status(400).json({
+            error: err.message
+        })
+    }
+})
+
+/**
+ * Profiles Table APIs
+ */
 
 router.get('/user-profile', auth, ProfileController.getUserProfile);
 router.put('/user-profile', auth, ProfileController.updateProfile);
