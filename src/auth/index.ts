@@ -9,6 +9,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
 
         if (error || !data.user) {
             res.status(401).json({ message: 'Unauthorized' });
+            throw error
         }
         else {
             (req as any).user = {

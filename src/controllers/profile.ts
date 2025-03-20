@@ -18,13 +18,15 @@ class ProfileController {
             res.status(400).json({
                 error: "Security Error"
             })
-        const { data, error } = await supabase.from("profiles").insert({ ...cond, plan: "TRIAL", plan_start: new Date(), plan_end: new Date(new Date().setDate(new Date().getDate() + 15)), total_usage_minutes: 0 })
-        if (error)
-            res.status(400).json({
-                error: error.message
-            })
-        else
-            res.status(200).json(data)
+        else {
+            const { data, error } = await supabase.from("profiles").insert({ ...cond, plan: "TRIAL", plan_start: new Date(), plan_end: new Date(new Date().setDate(new Date().getDate() + 15)), total_usage_minutes: 0 })
+            if (error)
+                res.status(400).json({
+                    error: error.message
+                })
+            else
+                res.status(200).json(data)
+        }
     }
     static getUserProfile = async (req: Request, res: Response) => {
         const user = (req as any).user;
@@ -38,7 +40,7 @@ class ProfileController {
                 error: error.message
             }
             )
-        res.status(200).json(data);
+        else res.status(200).json(data);
     }
     static updateProfile = async (req: Request, res: Response) => {
         const cond: Object = req.body;

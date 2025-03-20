@@ -2,13 +2,30 @@ import express from "express";
 import { handleWebhook } from "../controllers/webhookController";
 import ProfileController from "../controllers/profile";
 import { auth } from "../auth";
-import { attachAction, createSynthflowAction, getAssistant, listCalls, updateAssistant } from "../lib/synthflow";
+import { attachAction, createAssistant, createSynthflowAction, getAction, getAssistant, listCalls, updateAssistant } from "../lib/synthflow";
 import OptionalPreferenceController from "../controllers/optionalPreferenceController";
 import { createPaymentIntent, paymentValidate } from "../lib/stripe";
 import { Plan, PLAN_DETAILS } from "../types/plan";
 import { supabase } from "../supabaseClient";
 import ActionController from "../controllers/actionController";
 const router = express.Router();
+
+/**
+ * Sythnthflow APIs
+ */
+
+router.post("/synthflow/createAssistant", auth, async (req, res) => {
+    const { assistant } = req.body;
+    try {
+        const model_id = await createAssistant(assistant);
+        res.status(200).json({ model_id: model_id });
+    }
+    catch (err: any) {
+        res.status(400).json(err);
+        throw new Error(`Error: {err.message}`);
+    }
+})
+
 router.put("/synthflow/updateAssistant"
     , auth, async (req, res) => {
         const cond = req.body;
@@ -27,7 +44,6 @@ router.get("/synthflow/getAssistant"
     , auth, async (req, res) => {
         try {
             const data = await getAssistant((req as any).user);
-            console.log(data)
             res.status(200).json({
                 assistant: data
             })
@@ -74,10 +90,20 @@ router.post('/synthflow/attachAction', auth, async (req, res) => {
     }
 })
 
+router.get('/synthflow/action/:id', auth, async (req, res) => {
+    const id = req.params.id;
+    try {
+        const action = await getAction(id);
+        res.status(200).json(action);
+    }
+    catch (err) {
+        res.status(400).json(err);
+    }
+
+})
 
 
-
-router.get('/user-profile/:id', auth, ProfileController.getUserProfile);
+router.get('/user-profile', auth, ProfileController.getUserProfile);
 router.put('/user-profile', auth, ProfileController.updateProfile);
 router.post('/user-profile', auth, ProfileController.saveProfile);
 
@@ -168,11 +194,11 @@ router.post('/createPaymentIntent', auth, async (req, res) => {
 
 //Action Table
 router.post('/action', auth, ActionController.createAction);
-router.delete('/action?id', auth, ActionController.deleteAction);
+router.delete('/action/:id', auth, ActionController.deleteAction);
 router.put('/action', auth, ActionController.updateAction);
 router.get('/action/list', auth, ActionController.listAction);
-
-
+router.get('/action/:id', auth, ActionController.getActionById);
+router.post('/action/action_id', auth, ActionController.getActionByActioId);
 // router.get('/action', auth, ActionController.)
 
 router.post("/webhook/:id", handleWebhook);

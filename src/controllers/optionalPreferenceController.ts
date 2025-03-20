@@ -28,7 +28,7 @@ class OptionalPreferenceController {
                 error: error.message
             }
             )
-        res.status(200).json(data);
+        else res.status(200).json(data);
     }
     static updateOptionalPreferences = async (req: Request, res: Response) => {
         const user = (req as any).user;
@@ -43,7 +43,7 @@ class OptionalPreferenceController {
                 error: error.message
             }
             )
-        res.status(200).json(data);
+        else res.status(200).json(data);
     }
 }
 export default OptionalPreferenceController

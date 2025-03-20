@@ -276,6 +276,7 @@ export async function getAction(action_id: string) {
             const { response } = await res.json();
             return response.actions[0];
         }
+        throw new Error(`Error: synthflow request Error}`);
     } catch (err: any) {
         throw new Error(err);
     }
