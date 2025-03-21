@@ -122,7 +122,7 @@ router.post('/firecrawl/extractTattooShopInfo', auth, async (req, res) => {
  * 
  */
 
-router.get('/twiliow/buy', auth, async (__, res) => {
+router.get('/twilio/buy', auth, async (__, res) => {
     try {
         const phoneNumber = await buyTwilioPhoneNumber();
         res.status(200).json({
