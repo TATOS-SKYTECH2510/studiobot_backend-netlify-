@@ -45,6 +45,7 @@ export const buyTwilioPhoneNumber = async () => {
                         },
                     }
                 );
+                console.log(phoneNumber)
                 if (purchasedNumberResponse.status === 201) {
                     return phoneNumber;
                 } else {

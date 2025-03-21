@@ -36,7 +36,7 @@ class OptionalPreferenceController {
         const { data, error } = await supabase
             .from('optional_preferences')
             .update(cond)
-            .eq('user_id', user?.id)
+            .eq('user_id', user?.id).select()
             .single();
         if (error)
             res.status(400).json({
