@@ -112,7 +112,7 @@ router.post('/firecrawl/extractTattooShopInfo', auth, async (req, res) => {
     const { url } = req.body;
     try {
         const extractedTattoShopInfo = await extractTattooShopInfo(url);
-        res.status(200).json(extractTattooShopInfo);
+        res.status(200).json(extractedTattoShopInfo);
     } catch (error) {
         res.status(400).json(error);
     }
