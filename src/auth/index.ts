@@ -15,7 +15,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
             (req as any).user = {
                 ...data.user,
                 id: data.user.id,
-                role: 'user' // You can set roles dynamically  
+                role: 'user'
             };
             (req as any).user = data.user
         }
@@ -24,4 +24,4 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
     } catch (err) {
         next(err);
     }
-};  
+};
